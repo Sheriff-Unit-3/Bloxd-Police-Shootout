@@ -13,7 +13,9 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 let Player=[]//returns array of playerIds
-const spawn=[]
+const spawn=[10,25,-5]
+const pspawn=[51,30,7]
+const wspawn=[5,31,0]
 const GB='Grass Block'
 const BW='Blue Wool'
 const RW='Red Wool'
@@ -54,7 +56,7 @@ onPlayerJoin=(p)=>{
  const wlosses=api.getInventoryItemAmount(p,MD)
  Player.push(p)
  api.sendFlyingMiddleMessage(p,
-  ["Select your load outs! The options are on the walls."],100)
+  ["Select your load outs! The options are on the walls."],10000)
  api.setClientOption(p, "RightInfoText", [
  {str: "Your stats:"},
  "\n",
@@ -71,8 +73,8 @@ onPlayerJoin=(p)=>{
  {str:'Losses as Wanted: '+wlosses,style:{color:'red'}}
  ])
  api.setMaxPlayers(30, 40)//softMaxPlayers is 30, maxPlayers is 40
-  api.setClientOptions(p,[{'canChange':false,'canCraft':false,
-   'canPickUpItems':false,'canUseZoomKey':false,
+ api.setClientOptions(p,{'canChange':false,'canCraft':false,
+  'canPickUpItems':false,'canUseZoomKey':false,
   'canSeeNametagsThroughWalls':false,'canPickBlocks':false,
   'useFullInventory':false,'showKillfeed':false,'invincible':true,
   'healthRegenInterval':600000/*player regains health every 10 mins*/,
@@ -81,7 +83,8 @@ onPlayerJoin=(p)=>{
   'respawnButtonText':'Spectate','dealingDamageHeadMultiplier':3,
   'dealingDamageLegMultiplier':0.5,'dealingDamageDefaultMultiplier':1,
   'fallDamage':true,'airMomentumConservation':true,'maxAuraLevel':0,
-  'creative':false,'strictFluidBuckets':false}])
+  'creative':false,'strictFluidBuckets':false})
+ api.setItemSlot(p,1,'M1911')
  if(Player.length>5&&Game=='waiting'){
   api.broadcastMessage('Game will start in 20 secs')
   api.sendMessage(p,"Prepare for game start!")
@@ -115,7 +118,7 @@ Tick++
    api.setTargetPlayerSettingForEveryone(wId,'canSee',false)
    api.sendMessage(wId,
     'You are wanted! Beware: the police are hot on your trial!',{color:'red'})
-   api.setPosition(wId,[])
+   api.setPosition(wId,wspawn)
   }
  }
  else if(Game=='started'&&Tick==400){// This is when the police are released
@@ -125,6 +128,7 @@ Tick++
     {color:'yellow'})
    api.sendMessage(pId,'Search the building for any wanted criminals!')
    api.setTargetedPlayerSettingForEveryone(pId,'canSee',true,false)
+   api.setPosition(pId,pspawn)
   }
   for(let wId of Wanted){
    api.sendMessage(wId,"The Police are here! Hide or fight...")
